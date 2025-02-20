@@ -1,0 +1,52 @@
+# Memgraph Orb Example
+
+```elixir
+Mix.install([
+  {:kino, "~> 0.14.2"},
+  {:kino_orb, github: "marcnnn/kino_orb"}
+])
+```
+
+## Section
+
+```elixir
+nodes = [
+  %{id: 1, label: "Orb"},
+  %{id: 2, label: "Graph"},
+  %{id: 3, label: "Canvas"}
+]
+
+edges = [
+  %{id: 1, start: 1, end: 2, label: "DRAWS"},
+  %{id: 2, start: 2, end: 3, label: "ON"}
+]
+
+orb = Kino.Orb.new(%{nodes: nodes, edges: edges})
+
+```
+
+```elixir
+count = 60
+
+  nodes = Enum.map(4..count, fn i ->
+        %{ id: i, label: "#{i}"}
+      end)
+  edges = 
+        Enum.map(4..count, fn i ->
+        %{ id: i, start: 1, end: i, label: "#{i}"}
+      end)
+Kino.Orb.push(orb,%{nodes: nodes,edges: edges})
+```
+
+```elixir
+for i <- 60..100 do
+  nodes = [
+    %{id: i, label: "#{i}"}
+  ]
+  edges = [
+    %{ id: i, start: 1, end: i, label: "#{i}"}
+  ]
+  Kino.Orb.push(orb,%{nodes: nodes,edges: edges})
+  Process.sleep(1000)
+end
+```
