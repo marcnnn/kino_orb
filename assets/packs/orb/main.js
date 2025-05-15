@@ -19,7 +19,6 @@ export function init(ctx, content) {
     });
 
     ctx.handleEvent("push", (dataset) => {
-      console.log("Received new dataset", dataset);
       const nodes = dataset.nodes;
       const edges = dataset.edges;
       orb.data.merge({

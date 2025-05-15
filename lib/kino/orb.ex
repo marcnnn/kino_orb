@@ -68,6 +68,10 @@ defmodule Kino.Orb do
     Kino.JS.Live.cast(kino, {:push, graph})
   end
 
+  def pull(kino) do
+    Kino.JS.Live.call(kino, :pull)
+  end
+
   @impl true
   def init(graph, ctx) do
     {:ok, assign(ctx, orb: graph)}
@@ -79,8 +83,15 @@ defmodule Kino.Orb do
   end
 
   @impl true
-  def handle_cast({:push, graph}, ctx) do
+  def handle_cast({:push, %{nodes: new_nodes, edges: new_edges}}, %Kino.JS.Live.Context{assigns: %{orb: %{nodes: nodes, edges: edges}}} = ctx) do
+    nodes = new_nodes ++ nodes
+    edges = new_edges ++ edges
+    graph = %{nodes: nodes, edges: edges}
     broadcast_event(ctx, "push", graph)
     {:noreply, assign(ctx, orb: graph)}
+  end
+
+  def handle_call(:pull, _from, %Kino.JS.Live.Context{assigns: %{orb: graph}} = ctx) do
+    {:reply, graph, ctx}
   end
 end
